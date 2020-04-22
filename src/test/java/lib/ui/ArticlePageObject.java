@@ -7,6 +7,8 @@ import org.openqa.selenium.remote.RemoteWebDriver;
 abstract public class ArticlePageObject extends MainPageObject {
 
     protected static String
+            WATCHLIST,
+            MENU_BUTTON,
             OVERFLOW_READING_LIST,
             OVERFLOW_MENU_BUTTON,
             NO_THANKS_BUTTON,
@@ -67,11 +69,20 @@ abstract public class ArticlePageObject extends MainPageObject {
                     OVERFLOW_READING_LIST,
                     "Cannot find 'My lists' button",
                     10);
-        } else {
+        } else if (Platform.getInstance().isIOS()) {
             closeArticle();
             this.waitForElementAndClick(
                     OVERFLOW_READING_LIST,
                     "Cannot find 'Menu' button",
+                    10);
+        } else {
+            this.waitForElementAndClick(
+                    MENU_BUTTON,
+                    "Cannot find menu button",
+                    10);
+            this.tryClickElementWithFewAttempts(
+                    WATCHLIST,
+                    "Cannot find login button",
                     10);
         }
     }
@@ -86,9 +97,14 @@ abstract public class ArticlePageObject extends MainPageObject {
     public void unSaveArticle() {
         if (Platform.getInstance().isAndroid()) {
 
-        } else {
+        } else if (Platform.getInstance().isIOS()){
             this.waitForElementAndClick(
                     UN_SAVE,
+                    "Cannot find 'Save to reading list' button",
+                    10);
+        } else {
+            this.waitForElementAndClick(
+                    BOOKMARK_MENU_BUTTON,
                     "Cannot find 'Save to reading list' button",
                     10);
         }
@@ -108,6 +124,11 @@ abstract public class ArticlePageObject extends MainPageObject {
             this.waitForElementAndClick(
                     readingList,
                     "Cannot find list for saved articles",
+                    10);
+        } else if (Platform.getInstance().isIOS()) {
+            this.waitForElementAndClick(
+                    BOOKMARK_MENU_BUTTON,
+                    "Cannot find 'Save to reading list' button",
                     10);
         } else {
             this.waitForElementAndClick(

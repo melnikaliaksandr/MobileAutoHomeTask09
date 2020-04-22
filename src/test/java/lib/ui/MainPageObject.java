@@ -119,6 +119,38 @@ public class MainPageObject {
         return element.getAttribute(attribute);
     }
 
+    public void trySendKeysWithFewAttempts(String locator, String value, String errorMessage, int amountOfAttempts) {
+        int currentAttempts = 0;
+        boolean needMoreAttempts = true;
+        while (needMoreAttempts) {
+            try {
+                this.waitForElementAndSendKeys(locator, value, errorMessage, 1);
+                needMoreAttempts = false;
+            } catch (Exception e) {
+                if (currentAttempts > amountOfAttempts) {
+                    this.waitForElementAndSendKeys(locator, value, errorMessage, 1);
+                }
+            }
+            ++currentAttempts;
+        }
+    }
+
+    public void tryClickElementWithFewAttempts(String locator, String errorMessage, int amountOfAttempts) {
+        int currentAttempts = 0;
+        boolean needMoreAttempts = true;
+        while (needMoreAttempts) {
+            try {
+                this.waitForElementAndClick(locator, errorMessage, 1);
+                needMoreAttempts = false;
+            } catch (Exception e) {
+                if (currentAttempts > amountOfAttempts) {
+                    this.waitForElementAndClick(locator, errorMessage, 1);
+                }
+            }
+            ++currentAttempts;
+        }
+    }
+
     public WebElement waitForElementAndClick(String locator, String errorMessage, long timeoutInSeconds) {
         WebElement element = waitForElementPresent(locator, errorMessage, timeoutInSeconds);
         element.click();

@@ -9,6 +9,9 @@ import java.util.List;
 abstract public class SearchPageObject extends MainPageObject {
 
     protected static String
+            LOGIN,
+            WATCHLIST,
+            MENU_BUTTON,
             SKIP_ONBOARDING_BUTTON,
             SEARCH_INIT_ELEMENT,
             CLEAR_SEARCH_LINE_BUTTON,
@@ -21,6 +24,11 @@ abstract public class SearchPageObject extends MainPageObject {
 
     public SearchPageObject(RemoteWebDriver driver) {
         super(driver);
+    }
+
+    public void openAuthorizationPage() {
+        this.waitForElementAndClick(MENU_BUTTON, "Cannot find menu button", 10);
+        this.tryClickElementWithFewAttempts(LOGIN, "Cannot find login button", 10);
     }
 
     public boolean checkTitleInArticle(String title, int countOfArticleForChecking, List<WebElement> listOfArticles) {
@@ -53,7 +61,7 @@ abstract public class SearchPageObject extends MainPageObject {
     }
 
     public void waitForSearchResult(String substring) {
-        String searchResultXpath = replaceTemplate(SEARCH_RESULT_TITLE_BY_SUBSTRING_TPL, substring);
+        String searchResultXpath = replaceTemplate(SEARCH_RESULT_DESCRIPTION_BY_SUBSTRING_TPL, substring);
         this.waitForElementPresent(searchResultXpath,
                 "Cannot find search result with substring: " + substring);
     }
@@ -63,23 +71,25 @@ abstract public class SearchPageObject extends MainPageObject {
     }
 
     public void initSearchInput() {
+        this.waitForElementPresent(
+                SEARCH_INIT_ELEMENT,
+                "Cannot find search button",
+                10);
         this.waitForElementAndClick(
                 SEARCH_INIT_ELEMENT,
                 "Cannot find search button",
                 10);
-        this.waitForElementPresent(
-                SEARCH_INIT_ELEMENT,
-                "Cannot find search button");
     }
 
     public void initSearchInputAndClearSearchLine() {
+        this.waitForElementPresent(
+                SEARCH_INIT_ELEMENT,
+                "Cannot find search button",
+                10);
         this.waitForElementAndClick(
                 SEARCH_INIT_ELEMENT,
                 "Cannot find search button",
                 10);
-        this.waitForElementPresent(
-                SEARCH_INIT_ELEMENT,
-                "Cannot find search button");
         if (Platform.getInstance().isIOS()) {
             this.waitForElementAndClick(
                     CLEAR_SEARCH_LINE_BUTTON,

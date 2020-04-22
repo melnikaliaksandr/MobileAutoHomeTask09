@@ -6,6 +6,7 @@ import org.openqa.selenium.remote.RemoteWebDriver;
 abstract public class MyReadingListPageObject extends MainPageObject {
 
     protected static String
+            REMOVE_FROM_SAVED_BUTTON,
             ARTICLE,
             SEARCH_PAGE_BUTTON,
             PATH_TO_ARTICLE_TPL,
@@ -54,11 +55,18 @@ abstract public class MyReadingListPageObject extends MainPageObject {
 
     public void deleteArticleByName(String articleName) {
         String article = replaceTemplate(PATH_TO_ARTICLE_TPL, articleName);
-        this.swipeElementToLeft(
-                article,
-                "Cannot swipe element to left");
+        if (Platform.getInstance().isIOS() || Platform.getInstance().isAndroid()) {
+            this.swipeElementToLeft(
+                    article,
+                    "Cannot swipe element to left");
+        }
         if (Platform.getInstance().isIOS()) {
             this.clickElementToTheRightUpperCorner(article, "Cannot find saved article");
+        }
+        if (Platform.getInstance().isMW()) {
+            String path = replaceTemplate(REMOVE_FROM_SAVED_BUTTON, articleName);
+            this.waitForElementAndClick(path, "Cannot find saved article", 10);
+            driver.navigate().refresh();
         }
     }
 
